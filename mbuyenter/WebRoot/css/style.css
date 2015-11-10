@@ -1,0 +1,352 @@
+@charset "utf-8";
+
+*{margin:0;padding:0;}
+html {font-size: 62.5%; /* 10÷16=62.5% */}
+a:link,a:hover,a:visited{ text-decoration:none;/*超链接无下划线*/ } 
+ul{list-style:none;}
+li{list-style:none;}
+body{font-family:"Segoe UI", "Lucida Grande", Helvetica, Arial,
+		"Microsoft YaHei", FreeSans, Arimo, "Droid Sans",
+		"wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3",
+		FontAwesome, sans-serif;}
+iframe{border:none;}
+table{width:100%;}
+/*登陸頁*/
+.login_in{
+	width:800px;
+	margin-top: 150px;
+	margin-left: auto;
+	margin-right: auto;
+	background-color:#fff;
+}
+.login_txt{
+	padding-left: 10px;
+    border: 1px solid #d7d7d7;
+    height: 50px;
+    width: 270px;
+    font-size: 1.6rem;
+    color:#ff5b77;
+}
+.login_txt1{
+	font-size:2rem;
+	color:#9c9c9c;
+	vertical-align: middle;
+}
+.login_txt2{
+    display:block;
+    color:#ff5b77;
+    font-size:1.8rem;
+    width: 275px;
+}
+.login_txt3{
+	color:#ff5b77;
+	font-size:1.8rem;
+	line-height: 50px;
+}
+.login_ic{
+	width:60px;
+	margin-right:5px;
+}
+.login_btn{
+	background-color:#ff5b77;
+	border:none;
+	color:#fff;
+	width:100px;
+	height:45px;
+	font-size: 1.6rem;
+}
+.login_btn1{
+	background-color:#ff5b77;
+	border:none;
+	color:#fff;
+	width:200px;
+	height:50px;
+	font-size: 1.8rem;
+}
+.login_li{
+	text-align: center;
+    width:100%;
+    padding: 0;
+    font-size: 2rem;
+    color: #ccc;
+    margin-bottom: 0 !important;
+}
+.login_li_a{
+	padding: 8px 30px 9px 30px!important;
+	color:#ff5b77;
+	background-color:#fff;
+}
+.login_s{
+	width:100%;
+	height:350px;
+    margin-bottom: 50px;
+    border:2px solid #ff5b77;
+}
+.login_guide{
+	width: 290px;
+    float: right;
+    margin-top: -400px;
+    margin-right: -175px;
+}
+.containter_foot{
+	width:80%;
+	margin-bottom:20px;
+	margin-left:auto;
+	margin-right:auto;
+}
+/*店鋪首頁（1）*/
+.hea {
+	background: url(../images/index_hea.png) repeat-x bottom;
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 80px;
+	min-width:1100px;
+}
+.shop_logo{
+	margin:135px auto;
+	margin-bottom:30px;
+	width:450px;
+	height:190px;
+}
+.breadcrumb {
+	padding: 20px 15px 15px 0 !important;
+	margin-right: 10%;
+	background-color: transparent !important;
+}
+
+.breadcrumb>li+li:before {
+	color: #ff0a4f !important;
+	content: "|" !important;
+	padding: 0 5px;
+}
+
+.hea_a {
+	color: #ff0a4f;
+	font-size: 1.7rem;
+}
+.shop_li{
+    text-align:center;
+	list-style: none;
+	margin:auto;
+	width:1100px;
+	padding: 0 5px;
+	font-size: 2rem;
+	color:#ccc;
+	margin-bottom:0 !important;
+}
+.shop_li_ic{
+	width:30px;
+	margin-right:5px;
+}
+.containter{
+	margin-top: 20px;
+    width: 100%;
+    height: 610px;
+}
+.shop_a {
+	color: #9c9c9c;
+	font-size: 1.9rem;
+}
+.shop_head_img{
+	width:80px;
+	height:80px;
+}
+.shop_menu{
+	width:100%;
+	background-color:#ff0a4f;
+	height:45px;
+}
+.nav-tabs {
+	border: none !important;
+}
+.shop_li>li {
+	color: #fff !important;
+	margin: 0 !important;
+	border-left: 1px solid #fff !important;
+	border-right: 1px solid #fff !important;
+}
+
+.nav-tabs>li>a {
+	margin: 0 !important;
+	border-radius: 0 !important;
+}
+
+.shop_li_a {
+	padding:8px 68px 9px 68px!important;
+	color: #fff;
+}
+.shop_li_as {
+	padding:8px 35px 6px 35px!important;
+	color:#ffd800;
+}
+.sho_li_qro{
+	width: 35px;
+    margin-top: -7px;
+}
+.containter_s{
+	width:1320px;
+	margin-bottom:20px;
+	margin-left:auto;
+	margin-right:auto;
+}
+.slide{
+	background-color:#fff;
+	width:958px;
+	float: left;
+	border: 1px solid #ccc;
+}
+.cont_right{
+	margin-left: 20px;
+	float: right;
+	width: 340px;
+	border: 1px solid #ccc;
+}
+.list_hea{
+	font-size: 2rem;
+	padding: 20px 15px 5px 10px;
+	height:77px;
+	color:#fff;
+	border:none;
+	background-color:transparent;
+	background-size:contain;
+	background:url(../images/list_hea.png) no-repeat;
+}
+.list_lh{ 
+	background-color:#fff;
+	border:none;
+    height: 526.5px;
+    overflow: hidden;
+}
+.list_lh li{ padding:10px;margin-bottom:5px;background:#fff;}
+.list_lh li.lieven{ background:#fff;}
+.shop_fan{
+	width:1320px;
+	display: block;
+	background-color:#fff;
+	height:100px;
+	border:1px solid #ccc;
+	margin-top:15px;
+	padding:10px;
+}
+.shop_fan_logo{
+	float: left;
+	width:500px;
+	border-right:2px dashed #ccc;
+	height:100%;
+}
+.sho_fan_txt{
+	color:#ff0a4f;
+	display:block;
+	width:240px;
+	float:left;
+	text-align:center;
+}
+.shop_fan_txt{
+	padding: 13px 0;
+	width:100px;
+	text-align:center;
+	float:left;
+	height:100%;
+}
+.shop_fan_see{
+	width:670px;
+	height:80px;
+	float:left;
+	overflow: hidden;
+}
+.shop_fan_si{
+	border: 1px solid #ccc;
+    float: left;
+    width: 80px;
+    height: 80px;
+    margin-right: 10px;
+    border-radius: 2px;
+}
+.shop_shop{
+    float:left;
+	list-style: none;
+	margin:auto;
+	width:415px;;
+	padding: 0 5px;
+	font-size: 2rem;
+	margin-bottom:0 !important;
+}
+.shop_shop_right{
+    float:right;
+    margin-top: 8px;
+    color:#fff;
+	margin-right:20px;
+	width:500px;;
+	padding: 0 5px;
+	font-size:1.9rem;
+	margin-bottom:0 !important;
+}
+.shop_shop_a {
+	padding:8px 30px 9px 30px!important;
+	color: #fff;
+}
+.shop_all_e{
+	background-color:#fff;
+	width:210px;
+	margin: 0 5px;
+	margin-top: 20px;
+	float:left;
+	border:1px solid #ccc;
+	border-radius:4px;
+	height:auto;
+}
+.shop_all_td1{
+	font-size: 1.7rem;
+	text-align:center;
+	width:50%;
+	padding: 10px 0 10px 0;
+}
+.shop_all_td2{
+	padding:0 0 0 15px;
+	background-color:#f2f2f2;
+	color:#9c9c9c;
+}
+.footer{
+	width:100%;
+	display:block;
+	margin-top:10px;
+	position: absolute;
+}
+.foot_right{
+	text-align: right;
+    font-size: 1.6rem;
+    padding: 15px 0;
+    width:600px;
+    float: right;
+}
+.foot_right_a{
+	font-size: 1.7rem;
+    padding: 0 15px;
+    color: #ccc;
+}
+.top-fix{
+	position: fixed;
+	right: 35px;
+    float: right;
+    width: 100px;
+    height: 537px;
+    border: 1px solid #ccc;
+    border-radius:10px;
+    top: 30%;
+    background-color:#fff;
+}
+.top_fix_li{
+	text-align:center;
+	padding-top: 15px;
+}
+.top_fix_lid{
+	text-align:center;
+	padding: 22px 0;
+	background:url(../images/appdownback.png) no-repeat;
+	border-radius:0 0 10px 10px;
+}
+.top_fix_img{
+	width:50px;
+}

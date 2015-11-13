@@ -1,4 +1,4 @@
-package customerEnter.dao;
+package customerEnter.dao.UserManageDao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,11 +10,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-import customerEnter.bean.Customers;
-import customerEnter.dao.conndao.macaoBuyDB;
+import customerEnter.bean.customerUser.Customers;
+import customerEnter.dao.JDBCconndao.macaoBuyDB;
 
 
-public class UserManageDao {
+public class CustomerUserManageDao {
 
 	
 	
@@ -77,7 +77,7 @@ public class UserManageDao {
 	            }
 
 	        } catch (SQLException ex) {
-	            Logger.getLogger(UserManageDao.class.getName()).log(Level.SEVERE, null, ex);
+	            Logger.getLogger(CustomerUserManageDao.class.getName()).log(Level.SEVERE, null, ex);
 	        } finally {
 	            try {
 	                if (rs != null) {
@@ -90,7 +90,7 @@ public class UserManageDao {
 	                    conn.close();
 	                }
 	            } catch (SQLException ex) {
-	                Logger.getLogger(UserManageDao.class.getName()).log(Level.SEVERE, null, ex);
+	                Logger.getLogger(CustomerUserManageDao.class.getName()).log(Level.SEVERE, null, ex);
 	            }
 
 	        }
@@ -154,7 +154,7 @@ public class UserManageDao {
 			               user.setWxLogin(rs.getString("wxLogin"));
 		            }
 			 } catch (SQLException ex) {
-		            Logger.getLogger(UserManageDao.class.getName()).log(Level.SEVERE, null, ex);
+		            Logger.getLogger(CustomerUserManageDao.class.getName()).log(Level.SEVERE, null, ex);
 		        } finally {
 		            try {
 		                if (rs != null) {
@@ -167,7 +167,7 @@ public class UserManageDao {
 		                    conn.close();
 		                }
 		            } catch (SQLException ex) {
-		                Logger.getLogger(UserManageDao.class.getName()).log(Level.SEVERE, null, ex);
+		                Logger.getLogger(CustomerUserManageDao.class.getName()).log(Level.SEVERE, null, ex);
 		            }
 		        }
 			
@@ -190,20 +190,20 @@ public static int RegisterInfor(String sql){
    	    stmt = conn.prepareStatement(sql);
    	     num=stmt.executeUpdate();
    } catch (SQLException ex){
-       Logger.getLogger(UserManageDao.class.getName()).log(Level.SEVERE, null, ex);
+       Logger.getLogger(CustomerUserManageDao.class.getName()).log(Level.SEVERE, null, ex);
    }finally{
        try {
            if(stmt!=null)stmt.close();
            if(conn!=null)conn.close();
        } catch (SQLException ex) {
-           Logger.getLogger(UserManageDao.class.getName()).log(Level.SEVERE, null, ex);
+           Logger.getLogger(CustomerUserManageDao.class.getName()).log(Level.SEVERE, null, ex);
        }
    }
 	return num;
 }
 	 public static void main(String[] args) {
 		 
-		 Customers customer=UserManageDao.ValidateLogin("summer");
+		 Customers customer=CustomerUserManageDao.ValidateLogin("summer");
 		 if(customer.getAccount()==null){
 			 System.out.println("沒有此用戶名");
 		 }else{

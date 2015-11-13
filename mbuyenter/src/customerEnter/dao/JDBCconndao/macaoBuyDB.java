@@ -1,4 +1,4 @@
-package customerEnter.dao.conndao;
+package customerEnter.dao.JDBCconndao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

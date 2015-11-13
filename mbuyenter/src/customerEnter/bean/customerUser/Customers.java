@@ -1,4 +1,4 @@
-package customerEnter.bean;
+package customerEnter.bean.customerUser;
 /**
  * •ş†TĞÅÏ¢±í
  * */

@@ -1,4 +1,4 @@
-<%@page import="customerEnter.bean.Customers"%>
+<%@page import="customerEnter.bean.customerUser.Customers"%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%
 String path = request.getContextPath();
@@ -88,7 +88,7 @@ Customers CustomerValue=(Customers)session.getAttribute("CustomerValue");//登�
 	  <li><a href="Login.jsp" class="hea_a">登入</a></li>
 	  <li><a href="#" class="hea_a">註冊</a></li>
 	  <%} %>
-	  <li><a href="#" class="hea_a">購物籃</a></li>
+	  <li><a href="cart.jsp" class="hea_a">購物籃</a></li>
 	  <li><a href="#" class="hea_a">紅包積分</a></li>
 	  <li><a href="#" class="hea_a">足跡</a></li>
 	  <li><a href="#" class="hea_a">分享好友</a></li>

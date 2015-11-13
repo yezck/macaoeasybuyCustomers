@@ -1,4 +1,4 @@
-<%@page import="customerEnter.bean.Customers"%>
+<%@page import="customerEnter.bean.customerUser.Customers"%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%
 String path = request.getContextPath();
@@ -77,7 +77,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		   <div class="row" style="margin:0;">
 		     <div class="col-sm-12" style="margin-top:50px;">
 		       <div class="col-sm-12" style="padding: 10px 50px;">
-		         <input type="text" class="login_txt" id="AccountNo" name="AccountNo" value="" placeholder="請輸入宜買帳號(3-9位)" onchange="return ValidateAccountLength();">
+		         <input type="text" class="login_txt" id="AccountNo" name="AccountNo" value="" placeholder="請輸入宜買帳號(3-9位)" >
 		       </div>
 		       <div class="col-sm-12" style="padding: 10px 50px;">
 		         <input type="password" class="login_txt" id="AccountPsw" name="AccountPsw"  value="" placeholder="請輸入宜買密碼(6-20位)" onchange="">
@@ -187,11 +187,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	}else{
 	return true;
 	}
-	
-	
-	
-	
-	
 	}
 	
 	</script>

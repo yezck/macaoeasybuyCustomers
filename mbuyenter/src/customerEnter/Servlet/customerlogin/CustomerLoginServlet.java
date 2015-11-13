@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import customerEnter.bean.Customers;
-import customerEnter.dao.UserManageDao;
+import customerEnter.bean.customerUser.Customers;
+import customerEnter.dao.UserManageDao.CustomerUserManageDao;
 
 public class CustomerLoginServlet extends HttpServlet {
 
@@ -30,7 +30,7 @@ public class CustomerLoginServlet extends HttpServlet {
 		String AccountPsw=new String(request.getParameter("AccountPsw").getBytes("ISO-8859-1"),"UTF-8");
 		
 		
-		 Customers customer=UserManageDao.ValidateLogin(Account);
+		 Customers customer=CustomerUserManageDao.ValidateLogin(Account);
 		 if(customer.getAccount()==null){
 			 session.setAttribute("CustomerValue",null);
 			 response.sendRedirect("Login.jsp");

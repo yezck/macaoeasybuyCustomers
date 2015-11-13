@@ -1,14 +1,14 @@
-package customerEnter.bean;
+package customerEnter.bean.customerUser;
 /**
- * 會員紅包記錄表
+ * 會員積分記錄表
  * */
-public class UserMop {
+public class UserPoint {
 
 	private int id;
 	private int UserId;
-	private int MopId;
-	private int Mop;
-	private int MopType;
+	private int PointId;
+	private int Point;
+	private int PointType;
 	private int State;
 	private String addtime;
 	private String uptime;
@@ -25,23 +25,23 @@ public class UserMop {
 	public void setUserId(int userId) {
 		UserId = userId;
 	}
-	public int getMopId() {
-		return MopId;
+	public int getPointId() {
+		return PointId;
 	}
-	public void setMopId(int mopId) {
-		MopId = mopId;
+	public void setPointId(int pointId) {
+		PointId = pointId;
 	}
-	public int getMop() {
-		return Mop;
+	public int getPoint() {
+		return Point;
 	}
-	public void setMop(int mop) {
-		Mop = mop;
+	public void setPoint(int point) {
+		Point = point;
 	}
-	public int getMopType() {
-		return MopType;
+	public int getPointType() {
+		return PointType;
 	}
-	public void setMopType(int mopType) {
-		MopType = mopType;
+	public void setPointType(int pointType) {
+		PointType = pointType;
 	}
 	public int getState() {
 		return State;
@@ -67,6 +67,7 @@ public class UserMop {
 	public void setTitle(String title) {
 		this.title = title;
 	}
+	
 	
 	
 }

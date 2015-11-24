@@ -1,3 +1,4 @@
+<%@page import="customerEnter.bean.shangpin.ShangPinLabel"%>
 <%@page import="customerEnter.dao.goodsdao.ShangPinManagedao"%>
 <%@page import="customerEnter.bean.store.Shop"%>
 <%@page import="customerEnter.tool.DataTimeNumber"%>
@@ -18,13 +19,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 Customers CustomerValue=(Customers)session.getAttribute("CustomerValue");//登入的客戶
 
 
+/*
+UserMop usermop=(UserMop)session.getAttribute("usermop");//會員紅包信息
+UserPoint userpoint=(UserPoint)session.getAttribute("userpoint");//會員積分信息
+ArrayList<ShoppingCart> shoppingcart=(ArrayList<ShoppingCart>)session.getAttribute("shoppingcart");////根據登錄會員的id來獲取購物車中對應的商品信息
+*/
 
-UserMop usermop=CustomerUserMop_PointDao.GetOnlyUserMop(CustomerValue.getId());//會員紅包信息
-UserPoint userpoint=CustomerUserMop_PointDao.GetOnlyUserPoint(CustomerValue.getId());//會員積分信息
-
-ArrayList<ShoppingCart> shoppingcart=CustomerShoppingDao.CustomerShoppingCart(CustomerValue.getId());//根據登錄會員的id來獲取購物車中對應的商品信息
-
-
+         UserMop usermop=CustomerUserMop_PointDao.GetOnlyUserMop(CustomerValue.getId());//會員紅包信息
+		UserPoint userpoint=CustomerUserMop_PointDao.GetOnlyUserPoint(CustomerValue.getId());//會員積分信息
+		 ArrayList<ShoppingCart> shoppingcart=CustomerShoppingDao.CustomerShoppingCart(CustomerValue.getId());//根據登錄會員的id來獲取購物車中對應的商品信息
+	
+	ArrayList<ShangPin>ListUsershangpin=(ArrayList<ShangPin>)session.getAttribute("ListUsershangpin");//會員有關的全部商品
+	ArrayList<Shop> ListShop=(ArrayList<Shop>)session.getAttribute("ListShop");//會員有關的全部商品的店鋪
+	ArrayList<ShangPinLabel> shangpinlebelList=(ArrayList<ShangPinLabel>)session.getAttribute("shangpinlebelList");//商品活動標籤
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -251,34 +258,30 @@ ArrayList<ShoppingCart> shoppingcart=CustomerShoppingDao.CustomerShoppingCart(Cu
 			       
 			        <%
 			         String[] shopid=new String[shoppingcart.size()];//去掉重複的店鋪id值
-			               List<String> list=null;
+			              List<String> list=null;
 			              if(shoppingcart!=null){
-			               for(int i=0;i<shoppingcart.size();i++){ 
-			               shopid[i]=""+shoppingcart.get(i).getiShopId();
-			                list=DataTimeNumber.RemoveReArray(shopid);
+			              for(int i=0;i<shoppingcart.size();i++){ 
+			              shopid[i]=""+shoppingcart.get(i).getiShopId();
+			              list=DataTimeNumber.RemoveReArray(shopid);
 			          }
 			          %>
-			          <%int numTotal=0;
+			          <%
+			          int numTotal=0;
 			          for(int s=0;s<list.size();s++){
-			                 Shop shop=CustomerShoppingDao.CustomerShop(Integer.parseInt(list.get(s)));//根據店鋪的id來獲取此店鋪的id和名稱
-			                request.setAttribute("Shop", shop);
+			                 //Shop shop=CustomerShoppingDao.CustomerShop(Integer.parseInt(list.get(s)));//根據店鋪的id來獲取此店鋪的id和名稱
+			                 Shop shop=CustomerShoppingDao.CustomerUserShop(ListShop,Integer.parseInt(list.get(s)));//根據店鋪的id來獲取此店鋪的id和名稱
 			          %>
 			       <div class="col-xs-12 col-sm-12 skb_home" style="">
-			         <input type="checkbox" value="">&nbsp;&nbsp;<img src="http://wap.macaoeasybuy.com/<%=shop.getLogo() %>" style="width:50px;margin: 0 20px;">
+			         <input type="checkbox" value="">&nbsp;&nbsp;<img src="images/skb_home.png" style="width:50px;margin: 0 20px;">
 			         <span class="skb_hometxt"><%=shop.getShopname() %><span style="color:#ff5b77;">(<span><%=numTotal %></span>)</span></span>
 			       </div>
-			      
 			       
 			       
-			       
-			        <% 
+			        <%
 			        for(int i=0;i<shoppingcart.size();i++){ //根據購物車中的商品id獲取對應的商品信息
-			             ShangPin   cartshangpin=CustomerShoppingDao.CustomerShangpin(shoppingcart.get(i).getiGoodsId(),shop.getId());
-			             
-			             request.setAttribute("cartshangpin", cartshangpin);//此處把全部的購物籃商品信息存儲在session中，以便以後使用
-			             
+			             //ShangPin  cartshangpin=CustomerShoppingDao.CustomerShangpin(shoppingcart.get(i).getiGoodsId(),shop.getId());
+			             ShangPin  cartshangpin=ShangPinManagedao.CusShangpinSeetion(ListUsershangpin,shoppingcart.get(i).getiGoodsId(),shop.getId());
 			             if(cartshangpin!=null&&cartshangpin.getNumber()!=null){
-			              
 			        %>
 			       <div class="col-xs-12 col-sm-12 skb_homeshop" style="">
 			         <div class="skb_left skb_cks"><input type="checkbox" value=""></div>
@@ -290,10 +293,25 @@ ArrayList<ShoppingCart> shoppingcart=CustomerShoppingDao.CustomerShoppingCart(Cu
 					        var paragraph = document.getElementsByTagName('body')[0].getElementsByTagName('span')[0];
 					        $clamp(paragraph, {clamp: 1, useNativeClamp: false, animate: false});
 					    </script>
-					   <span><img src="images/skb_1.png" class="skb_ic"></span>
+					    <%
+					    if(cartshangpin.getShangpinLable()!=null&&shangpinlebelList.size()>0){
+					    String[] shangpinlabel=DataTimeNumber.GetStringModelValue(cartshangpin.getShangpinLable());
+					    for(int t=0;t<shangpinlabel.length;t++){
+					    if(!shangpinlabel[t].equals("")){
+					    for(int u=0;u<shangpinlebelList.size();u++){
+					    if(Integer.parseInt(shangpinlabel[t])==shangpinlebelList.get(u).getId()){ %>
+					    <span><img src="http://wap.macaoeasybuy.com/<%=shangpinlebelList.get(u).getPicture() %>" class="skb_ic"></span>
+					    <%}
+					    }
+					    }
+					    }
+					     }%>
+					  
+					   <!--  
 					   <span><img src="images/skb_3.png" class="skb_ic"></span>
 					   <span><img src="images/skb_2.png" class="skb_ic"></span>
 					   <span><img src="images/skb_4.png" class="skb_ic"></span>
+					   -->
 					   <div id="scrollDiv_keleyi_com" class="scrollDiv">
 						<ul>
 						  <li>店主贈送 10分積分</li>
@@ -305,7 +323,8 @@ ArrayList<ShoppingCart> shoppingcart=CustomerShoppingDao.CustomerShoppingCart(Cu
 			         <div class="skb_left skb_inn_1">
 						<button class="skb_innbtn" >
 						 <a href="#" class="show-pop-large<%=i %>  skb_innbtn" data-placement="auto">
-						    <span><%=shoppingcart.get(i).getsStandard() %></span>
+						 
+						    <span><%=shoppingcart.get(i).getsStandard()%></span>
 						    <img src="images/skb_pen.png" style="margin:-5px 0 0 15px;">
 						 </a>
 						</button>	   
@@ -330,6 +349,7 @@ ArrayList<ShoppingCart> shoppingcart=CustomerShoppingDao.CustomerShoppingCart(Cu
 									   <%
 									   String[] tupian=DataTimeNumber.StringInventory(cartshangpin.getTupian());
 									    for(int ii=0;ii<tupian.length;ii++){
+									   
 			                                if(tupian.length==1&&tupian[0].length()==0){
 				                                         //System.out.println("沒有");
 			                                }else if(tupian.length==0){
@@ -360,13 +380,18 @@ ArrayList<ShoppingCart> shoppingcart=CustomerShoppingDao.CustomerShoppingCart(Cu
 					  	  	    <div class="col-xs-10 col-sm-10" style="padding:0;">
 						  	  	  <div class="yListr">
 									<ul>
+									<%
+									List<String>guigetow= DataTimeNumber.getGuigeTwo(cartshangpin.getGuige());
+									 %>
 									   <li>
-										<button>35碼</button>
-										<button>36碼</button>
-										<button>37碼</button>
-										<button>38碼</button>
-										<button>39碼</button>
-										<button class="yListr_butdis" disabled="disabled">40碼</button>
+									   <%if(guigetow.size() ==0){%>
+									   □□□□□□□□□□□□□□□□□□□□
+									   <% }else{
+									   for(int l=0;l<guigetow.size();l++){
+									   %>
+									   <button><%=guigetow.get(l) %></button>
+									   <input type="hidden" name="Size" value="<%=guigetow.get(l) %>" >
+									   <%}}%>
 										</li>
 									</ul>
 									<script>
@@ -453,9 +478,20 @@ ArrayList<ShoppingCart> shoppingcart=CustomerShoppingDao.CustomerShoppingCart(Cu
 			         <div class="skb_left skb_inoperation1">
 			           <img src="images/skb_heart.png" style="width:35px;margin-right:10px;">
 			           <img src="images/skb_share.png" style="width:35px;margin-right:10px;">
-			           <img src="images/skb_delet.png" style="width:35px;margin-right:10px;">
+			           <a  onclick="return IsNoDelete<%=i%>();" " ><img src="images/skb_delet.png" style="width:35px;margin-right:10px;" ></a>
 			         </div>
-			        
+			        <script type="text/javascript">
+			        function IsNoDelete<%=i%>(){
+			         var r=confirm("确定購物籃取消此商品吗？");
+                           if(r==false){
+                              return false;
+                              }else{
+                              window.location.href="DeleteCartGoodsServlet?cartid=<%=shoppingcart.get(i).getId() %>";   
+                                 return true;
+                                   }
+			        }
+			        </script>
+			        <%if(cartshangpin.getTuan()==1){ %>
 			         <div class="col-xs-12 col-sm-12" style="padding:0 40px 10px 0;">
 			           <div style="float:right;"> 
 			            <img src="images/skb_alarm.png" class="skb_alarm" style="">
@@ -464,14 +500,16 @@ ArrayList<ShoppingCart> shoppingcart=CustomerShoppingDao.CustomerShoppingCart(Cu
 						</div> 
 			           </div>
 			         </div>
-			        <!-- 紅包
+			         <%}else{}%>
+			         
+			         <%if(cartshangpin.getMop()>0){ %>
 			         <div class="col-xs-12 col-sm-12" style="padding-right: 40px;">
 			          <div style="float:right;"> 
 			           <img src="images/skb_packet.png" style="width:60px;margin: -5px 10px 0 0;">
-			           <span style="color:#f0c03e;font-size:1.6rem;">可抵紅包 MOP 15</span>
+			           <span style="color:#f0c03e;font-size:1.6rem;">可抵紅包 MOP <%=cartshangpin.getMop() %></span>
 			          </div>
 			         </div>
-			         --> 
+			         <%}else{}%>
 			       </div>
 			       
 			       <script type="text/javascript">
@@ -545,49 +583,69 @@ ArrayList<ShoppingCart> shoppingcart=CustomerShoppingDao.CustomerShoppingCart(Cu
 			         <div class="skb_left skb_in_price">金額(MOP)</div>
 			         <div class="skb_left skb_inoperation">操作</div>
 			       </div>
-			       
-			       <%
-			               String[] shopidJiang=new String[shoppingcart.size()];//去掉重複的店鋪id值
-			               List<String> listJiang=null;
+			         <%
+			         String[] shopidJiangjia=new String[shoppingcart.size()];//去掉重複的店鋪id值
+			               List<String> listjiangjia=null;
 			              if(shoppingcart!=null){
 			               for(int i=0;i<shoppingcart.size();i++){ 
-			               shopidJiang[i]=""+shoppingcart.get(i).getiShopId();
-			               listJiang=DataTimeNumber.RemoveReArray(shopidJiang);
+			               shopidJiangjia[i]=""+shoppingcart.get(i).getiShopId();
+			                listjiangjia=DataTimeNumber.RemoveReArray(shopidJiangjia);
 			          }
 			          %>
 			          <%
-			          for(int s=0;s<listJiang.size();s++){
-			                 ShangPin  shangpinJiang=(ShangPin)request.getAttribute("cartshangpin");
-			                 Shop  shopJiang=(Shop)request.getAttribute("Shop");
-			                 
+			          int numTotal=0;
+			          for(int s=0;s<list.size();s++){
+			                 //Shop shop=CustomerShoppingDao.CustomerShop(Integer.parseInt(list.get(s)));//根據店鋪的id來獲取此店鋪的id和名稱
+			                     Shop shop=CustomerShoppingDao.CustomerUserShop(ListShop,Integer.parseInt(list.get(s)));//根據店鋪的id來獲取此店鋪的id和名稱
+			           for(int i=0;i<shoppingcart.size();i++){ //根據購物車中的商品id獲取對應的商品信息
+			             //ShangPin  cartshangpin=CustomerShoppingDao.CustomerShangpin(shoppingcart.get(i).getiGoodsId(),shop.getId());
+			              ShangPin  cartshangpin=ShangPinManagedao.CusShangpinSeetion(ListUsershangpin,shoppingcart.get(i).getiGoodsId(),shop.getId());
+			             if(cartshangpin!=null&&cartshangpin.getNumber()!=null&&cartshangpin.getJiang()==1&&cartshangpin.getShopid()==shop.getId()){
 			          %>
 			       <div class="col-xs-12 col-sm-12 skb_home" style="">
-			         <input type="checkbox" value="">&nbsp;&nbsp;<img src="http://wap.macaoeasybuy.com/<%=shopJiang.getLogo() %> style="width:50px;margin: 0 20px;">
-			         <span class="skb_hometxt"><%=shopJiang.getShopname() %><span style="color:#ff5b77;">(<span>2</span>)</span></span>
+			         <input type="checkbox" value="">&nbsp;&nbsp;<img src="images/skb_home.png" style="width:50px;margin: 0 20px;">
+			         <span class="skb_hometxt"><%=shop.getShopname()%><span style="color:#ff5b77;">(<span><%=numTotal %></span>)</span></span>
 			       </div>
+			       <%}
+			             } %>
 			       
-			       
-			       <% 
+			      <% 
+			        
 			        for(int i=0;i<shoppingcart.size();i++){ //根據購物車中的商品id獲取對應的商品信息
-			             ShangPin   cartshangpinJiang=(ShangPin)request.getAttribute("cartshangpin");
-			             
-			             if(cartshangpinJiang!=null&&cartshangpinJiang.getNumber()!=null&&cartshangpinJiang.getJiang()==1){
+			            // ShangPin  cartshangpin=CustomerShoppingDao.CustomerShangpin(shoppingcart.get(i).getiGoodsId(),shop.getId());
+			             ShangPin  cartshangpin=ShangPinManagedao.CusShangpinSeetion(ListUsershangpin,shoppingcart.get(i).getiGoodsId(),shop.getId());
+			             if(cartshangpin!=null&&cartshangpin.getNumber()!=null&&cartshangpin.getJiang()==1){
 			              
 			        %>
 			       <div class="col-xs-12 col-sm-12 skb_homeshop" style="">
 			         <div class="skb_left skb_cks"><input type="checkbox" value=""></div>
-			         <div class="skb_left skb_ckimg_1"><img src="images/skbpr1.png" class="skb_ck_img"></div>
+			         <div class="skb_left skb_ckimg_1"><img src="http://wap.macaoeasybuy.com/<%=cartshangpin.getPic() %>" class="skb_ck_img"></div>
+			         
 			         <!-- 商品信息 -->
 			         <div class="skb_left skb_inf_1">
-			           <span style="display:block"><%=cartshangpinJiang.getTitle() %></span>
+			           <span style="display:block"><%=cartshangpin.getTitle() %></span>
 			           <script>
 					        var paragraph = document.getElementsByTagName('body')[0].getElementsByTagName('span')[0];
 					        $clamp(paragraph, {clamp: 1, useNativeClamp: false, animate: false});
 					    </script>
-					   <span><img src="images/skb_1.png" class="skb_ic"></span>
+					    
+					    <%
+					    if(cartshangpin.getShangpinLable()!=null&&shangpinlebelList.size()>0){
+					    String[] shangpinlabel=DataTimeNumber.GetStringModelValue(cartshangpin.getShangpinLable());
+					    for(int t=0;t<shangpinlabel.length;t++){
+					    if(!shangpinlabel[t].equals("")){
+					    for(int u=0;u<shangpinlebelList.size();u++){
+					    if(Integer.parseInt(shangpinlabel[t])==shangpinlebelList.get(u).getId()){ %>
+					    <span><img src="http://wap.macaoeasybuy.com/<%=shangpinlebelList.get(u).getPicture() %>" class="skb_ic"></span>
+					    <%}
+					    }
+					    }
+					    }
+					     }%>
+					   <!--  <span><img src="images/skb_1.png" class="skb_ic"></span>
 					   <span><img src="images/skb_3.png" class="skb_ic"></span>
 					   <span><img src="images/skb_2.png" class="skb_ic"></span>
-					   <span><img src="images/skb_4.png" class="skb_ic"></span>
+					   <span><img src="images/skb_4.png" class="skb_ic"></span>-->
 					   <div id="scrollDiv_keleyi_com1" class="scrollDiv">
 						<ul>
 						  <li>店主贈送 10分積分</li>
@@ -597,16 +655,17 @@ ArrayList<ShoppingCart> shoppingcart=CustomerShoppingDao.CustomerShoppingCart(Cu
 					   </div>
 			         </div>
 			         <div class="skb_left skb_inn_1">
-			             <span>綠色，38碼</span>
+			             <span><%=shoppingcart.get(i).getsStandard()%></span>
 			             <img src="images/skb_pen.png" style="margin:-5px 0 0 15px;">			           
 			         </div>
+						
 			         <div class="skb_left skb_inp_1">
 			          <button class="skb_innbtn" title="號外！店主促銷減價："  data-container="body" data-trigger= "hover focus" data-toggle="popover" data-placement="bottom" 
-			              data-content="比加入購物籃前的MOP150，再優惠了MOP50 !">
-			           <del style="color:#cacaca;">350.00</del><br>
-			           <span>100.00</span><br>
+			              data-content="比加入購物籃前的MO<%=cartshangpin.getCostPrice() %>，再優惠了MOP<%=cartshangpin.getCostPrice()-cartshangpin.getPrice()%>!">
+			           <del style="color:#cacaca;"><%=cartshangpin.getCostPrice() %></del><br>
+			           <span><%=cartshangpin.getPrice() %></span><br>
 			           <img src="images/skb_pr1.png" style="width: 55px;">
-			           <span class="skb_detxt">省200.00元</span>
+			           <span class="skb_detxt">省<%=cartshangpin.getCostPrice()-cartshangpin.getPrice()%>元</span>
 			          </button>
 			           <script>$(function () 
 					      { $("[data-toggle='popover']").popover();
@@ -616,21 +675,39 @@ ArrayList<ShoppingCart> shoppingcart=CustomerShoppingDao.CustomerShoppingCart(Cu
 			         <div class="skb_left skp_innum_1">
 					   <div class="input-group skb_btgroup" style="">
 							<div class="input-group-btn">
-			                  <button type="button" class="btn skb_btnadd dropdown-toggle"><span class="skb_addbtic">-</span></button>
+			                  <button type="button" class="btn skb_btnadd dropdown-toggle" onclick="DeleteNumJiang<%=i%>();"><span class="skb_addbtic">-</span></button>
 			               </div><!-- /btn-group -->
-			               <input type="text" class="form-control skb_addtxt" placeholder="0">
+			               <input type="text" class="form-control skb_addtxt" placeholder="0" id="NumEveryTotalJiang<%=i %>" value="<%=shoppingcart.get(i).getiCount()%>">
 			               <span class="input-group-btn">
-			                  <button class="btn skb_btnadd" type="button"><span class="skb_addbtic">+</span></button>
+			                  <button class="btn skb_btnadd" type="button" onclick="AddNumJiang<%=i%>();"><span class="skb_addbtic">+</span></button>
 			               </span>
 			            </div>
-			            <div style="margin-top: 10px;"><span>15</span>件存貨</div>
+			            <%
+			            String[] InvenArray=DataTimeNumber.StringInventory(cartshangpin.getKucun());
+			            int InvenTotal=DataTimeNumber.Kucun(InvenArray);
+			             %>
+			            <div style="margin-top: 10px;"><span><%=InvenTotal %></span>件存貨</div>
 			         </div>
-			         <div class="skb_left skb_in_price1"><span>150.00</span>元</div>
+			         <div class="skb_left skb_in_price1"><span>
+			         <input type="hidden" name="" id="ShangPinPriceJiang<%=i %>" value="<%=cartshangpin.getPrice() %>">
+			        <input type="text" name="" id="totalmopJiang<%=i%>" style="border:none;" value="<%=cartshangpin.getPrice()*shoppingcart.get(i).getiCount()%>" size="2" readonly="readonly">
+			         </span>元</div>
 			         <div class="skb_left skb_inoperation1">
 			           <img src="images/skb_heart.png" style="width:35px;margin-right:10px;">
 			           <img src="images/skb_share.png" style="width:35px;margin-right:10px;">
-			           <img src="images/skb_delet.png" style="width:35px;margin-right:10px;">
+			          <a  onclick="return IsNoDeleteJiang<%=i%>();" ><img src="images/skb_delet.png" style="width:35px;margin-right:10px;" ></a>
 			         </div>
+			        <script type="text/javascript">
+			        function IsNoDeleteJiang<%=i%>(){
+			         var r=confirm("确定購物籃取消此商品吗？");
+                           if(r==false){
+                              return false;
+                              }else{
+                              window.location.href="DeleteCartGoodsServlet?cartid=<%=shoppingcart.get(i).getId() %>";   
+                                 return true;
+                                   }
+			        }
+			        </script>
 			         <!-- 倒計時
 			         <div class="col-xs-12 col-sm-12" style="padding:0 40px 10px 0;">
 			           <div style="float:right;"> 
@@ -649,9 +726,43 @@ ArrayList<ShoppingCart> shoppingcart=CustomerShoppingDao.CustomerShoppingCart(Cu
 			         </div>
 			         -->
 			       </div>
+			      <script type="text/javascript">
+			            function AddNumJiang<%=i%>(){
+			             var shangPinPrice=document.getElementById("ShangPinPriceJiang<%=i %>").value;
+			             var totalmop=document.getElementById("totalmopJiang<%=i %>").value;
+			             var numeverytotal=document.getElementById("NumEveryTotalJiang<%=i %>").value;
+			                     numeverytotal++;
+			                     numeverytotal=document.getElementById("NumEveryTotalJiang<%=i %>").value=numeverytotal;
+			                     
+			                      var TotalMop=Number(numeverytotal)*Number(shangPinPrice);
+			                    document.getElementById("totalmopJiang<%=i %>").value=TotalMop;
+			            }
+			            
+			            function DeleteNumJiang<%=i%>(){
+			            var shangPinPrice=document.getElementById("ShangPinPriceJiang<%=i %>").value;
+			             var totalmop=document.getElementById("totalmopJiang<%=i %>").value;
+			             var numeverytotal=document.getElementById("NumEveryTotalJiang<%=i %>").value;
+			                     if(numeverytotal<=1){
+			                      document.getElementById("NumEveryTotalJiang<%=i %>").value=numeverytotal;
+			                      var TotalMop=Number(numeverytotal)*Number(shangPinPrice);
+			                    document.getElementById("totalmopJiang<%=i %>").value=TotalMop;
+			                     }else{
+			                     numeverytotal--;
+			                     document.getElementById("NumEveryTotalJiang<%=i %>").value=numeverytotal;
+			                     var TotalMop=Number(numeverytotal)*Number(shangPinPrice);
+			                    document.getElementById("totalmopJiang<%=i %>").value=TotalMop;
+			                     }
+			            }
+			            
+			            </script>
+			  <%}else{%>
+			       <%} %>
+			       
+			       
 			       <%} %>
 			       <%} %>
-			       <%} %>
+			       
+			       <%}else{%>
 			       <%} %>
 			       <div class="col-xs-12 col-sm-12" style="text-align:center;padding: 20px 0;">
 			           <span style="color:#cacaca;">~沒有更多內容~</span>
@@ -680,24 +791,68 @@ ArrayList<ShoppingCart> shoppingcart=CustomerShoppingDao.CustomerShoppingCart(Cu
 			         <div class="skb_left skb_in_price">金額(MOP)</div>
 			         <div class="skb_left skb_inoperation">操作</div>
 			       </div>
+			       <%
+			         String[] shopidWaring=new String[shoppingcart.size()];//去掉重複的店鋪id值
+			               List<String> listwaring=null;
+			              if(shoppingcart!=null){
+			               for(int i=0;i<shoppingcart.size();i++){ 
+			               shopidWaring[i]=""+shoppingcart.get(i).getiShopId();
+			                listwaring=DataTimeNumber.RemoveReArray(shopidWaring);
+			          }
+			          %>
+			          <%
+			          int numTotal=0;
+			          for(int s=0;s<listwaring.size();s++){
+			          
+			                 //Shop shop=CustomerShoppingDao.CustomerShop(Integer.parseInt(list.get(s)));//根據店鋪的id來獲取此店鋪的id和名稱
+			                     Shop shop=CustomerShoppingDao.CustomerUserShop(ListShop,Integer.parseInt(listwaring.get(s)));//根據店鋪的id來獲取此店鋪的id和名稱
+			           for(int i=0;i<shoppingcart.size();i++){ //根據購物車中的商品id獲取對應的商品信息
+			             //ShangPin  cartshangpin=CustomerShoppingDao.CustomerShangpin(shoppingcart.get(i).getiGoodsId(),shop.getId());
+			               ShangPin  cartshangpin=ShangPinManagedao.CusShangpinSeetion(ListUsershangpin,shoppingcart.get(i).getiGoodsId(),shop.getId());
+			             if(cartshangpin!=null&&cartshangpin.getNumber()!=null&&cartshangpin.getiWarningCount()<=1&&listwaring.equals(cartshangpin.getShopid())){
+			          %>
 			       <div class="col-xs-12 col-sm-12 skb_home" style="">
 			         <input type="checkbox" value="">&nbsp;&nbsp;<img src="images/skb_home.png" style="width:50px;margin: 0 20px;">
-			         <span class="skb_hometxt">FridayShoes<span style="color:#ff5b77;">(<span>2</span>)</span></span>
+			         <span class="skb_hometxt"><%=shop.getShopname() %><span style="color:#ff5b77;">(<span>2</span>)</span></span>
 			       </div>
+			       <%}}%>
+			       
+			       <% 
+			        
+			        for(int i=0;i<shoppingcart.size();i++){ //根據購物車中的商品id獲取對應的商品信息
+			            // ShangPin  cartshangpin=CustomerShoppingDao.CustomerShangpin(shoppingcart.get(i).getiGoodsId(),shop.getId());
+			             ShangPin  cartshangpin=ShangPinManagedao.CusShangpinSeetion(ListUsershangpin,shoppingcart.get(i).getiGoodsId(),shop.getId());
+			             if(cartshangpin!=null&&cartshangpin.getNumber()!=null&&cartshangpin.getiWarningCount()<=1&&listwaring.equals(cartshangpin.getShopid())){
+			              
+			        %>
 			       <div class="col-xs-12 col-sm-12 skb_homeshop" style="">
 			         <div class="skb_left skb_cks"><input type="checkbox" value=""></div>
-			         <div class="skb_left skb_ckimg_1"><img src="images/skbpr1.png" class="skb_ck_img"></div>
+			         <div class="skb_left skb_ckimg_1"><img src="http://wap.macaoeasybuy.com/<%=cartshangpin.getPic() %>" class="skb_ck_img"></div>
 			         <!-- 商品信息 -->
 			         <div class="skb_left skb_inf_1">
-			           <span style="display:block">洛馬克風木底小跟鞋</span>
+			           <span style="display:block"><%=cartshangpin.getTitle() %></span>
 			           <script>
 					        var paragraph = document.getElementsByTagName('body')[0].getElementsByTagName('span')[0];
 					        $clamp(paragraph, {clamp: 1, useNativeClamp: false, animate: false});
 					    </script>
-					   <span><img src="images/skb_1.png" class="skb_ic"></span>
+					    
+					    <%
+					    if(cartshangpin.getShangpinLable()!=null&&shangpinlebelList.size()>0){
+					    String[] shangpinlabel=DataTimeNumber.GetStringModelValue(cartshangpin.getShangpinLable());
+					    for(int t=0;t<shangpinlabel.length;t++){
+					    if(!shangpinlabel[t].equals("")){
+					    for(int u=0;u<shangpinlebelList.size();u++){
+					    if(Integer.parseInt(shangpinlabel[t])==shangpinlebelList.get(u).getId()){ %>
+					    <span><img src="http://wap.macaoeasybuy.com/<%=shangpinlebelList.get(u).getPicture() %>" class="skb_ic"></span>
+					    <%}
+					    }
+					    }
+					    }
+					     }%>
+					   <!--  <span><img src="images/skb_1.png" class="skb_ic"></span>
 					   <span><img src="images/skb_3.png" class="skb_ic"></span>
 					   <span><img src="images/skb_2.png" class="skb_ic"></span>
-					   <span><img src="images/skb_4.png" class="skb_ic"></span>
+					   <span><img src="images/skb_4.png" class="skb_ic"></span>-->
 					   <div id="scrollDiv_keleyi_com2" class="scrollDiv">
 						<ul>
 						  <li>店主贈送 10分積分</li>
@@ -707,32 +862,51 @@ ArrayList<ShoppingCart> shoppingcart=CustomerShoppingDao.CustomerShoppingCart(Cu
 					   </div>
 			         </div>
 			         <div class="skb_left skb_inn_1">
-			             <span>綠色，38碼</span>
+			             <span><%=shoppingcart.get(i).getsStandard()%></span>
 			             <img src="images/skb_pen.png" style="margin:-5px 0 0 15px;">			           
 			         </div>
 			         <div class="skb_left skb_inp_1">
-			           <del style="color:#cacaca;">350.00</del><br>
-			           <span>100.00</span><br>
-			           <span class="skb_detxt">省200.00元</span>
+			           <del style="color:#cacaca;"><%=cartshangpin.getCostPrice() %></del><br>
+			           <span><%=cartshangpin.getPrice() %></span><br>
+			           <span class="skb_detxt">省<%=cartshangpin.getCostPrice()-cartshangpin.getPrice()%>元</span>
 			         </div>
 			         <div class="skb_left skp_innum_1">
 					   <div class="input-group skb_btgroup" style="">
 							<div class="input-group-btn">
-			                  <button type="button" class="btn skb_btnadd dropdown-toggle"><span class="skb_addbtic">-</span></button>
+			                  <button type="button" class="btn skb_btnadd dropdown-toggle" onclick="DeleteNumiWaring<%=i%>();"><span class="skb_addbtic">-</span></button>
 			               </div><!-- /btn-group -->
-			               <input type="text" class="form-control skb_addtxt" placeholder="0">
+			               <input type="text" class="form-control skb_addtxt" placeholder="0" id="NumEveryTotaliWaring<%=i%>" value="<%=shoppingcart.get(i).getiCount()%>">
 			               <span class="input-group-btn">
-			                  <button class="btn skb_btnadd" type="button"><span class="skb_addbtic">+</span></button>
+			                  <button class="btn skb_btnadd" type="button" onclick="AddNumiWaring<%=i%>();"><span class="skb_addbtic">+</span></button>
 			               </span>
 			            </div>
-			            <div style="margin-top: 10px;color:#ff5b77;"><span>2</span>件存貨<img src="images/skb_pr2.png" style="width:65px;margin:-4px 0 0 10px;"></div>
+			            <%
+			            String[] InvenArray=DataTimeNumber.StringInventory(cartshangpin.getKucun());
+			            int InvenTotal=DataTimeNumber.Kucun(InvenArray);
+			             %>
+			            <div style="margin-top: 10px;color:#ff5b77;"><span><%=InvenTotal %></span>件存貨<img src="images/skb_pr2.png" style="width:65px;margin:-4px 0 0 10px;"></div>
 			         </div>
-			         <div class="skb_left skb_in_price1"><span>150.00</span>元</div>
+			         <div class="skb_left skb_in_price1">
+			         <span>
+			          <input type="hidden" name="" id="ShangPinPriceiWaring<%=i %>" value="<%=cartshangpin.getPrice() %>">
+			          <input type="text" name="" id="totalmopiWaring<%=i%>" style="border:none;" value="<%=cartshangpin.getPrice()*shoppingcart.get(i).getiCount()%>" size="2" readonly="readonly">
+			         </span>元</div>
 			         <div class="skb_left skb_inoperation1">
 			           <img src="images/skb_heart.png" style="width:35px;margin-right:10px;">
 			           <img src="images/skb_share.png" style="width:35px;margin-right:10px;">
-			           <img src="images/skb_delet.png" style="width:35px;margin-right:10px;">
+			           <a  onclick="return IsNoDeleteiWaring<%=i%>();" ><img src="images/skb_delet.png" style="width:35px;margin-right:10px;" ></a>
 			         </div>
+			        <script type="text/javascript">
+			        function IsNoDeleteiWaring<%=i%>(){
+			         var r=confirm("确定購物籃取消此商品吗？");
+                           if(r==false){
+                              return false;
+                              }else{
+                              window.location.href="DeleteCartGoodsServlet?cartid=<%=shoppingcart.get(i).getId() %>";   
+                                 return true;
+                                   }
+			        }
+			        </script>
 			         <!-- 倒計時
 			         <div class="col-xs-12 col-sm-12" style="padding:0 40px 10px 0;">
 			           <div style="float:right;"> 
@@ -751,11 +925,52 @@ ArrayList<ShoppingCart> shoppingcart=CustomerShoppingDao.CustomerShoppingCart(Cu
 			         </div>
 			         -->
 			       </div>
+			       <script type="text/javascript">
+			            function AddNumiWaring<%=i%>(){
+			             var shangPinPrice=document.getElementById("ShangPinPriceiWaring<%=i %>").value;
+			             var totalmop=document.getElementById("totalmopiWaring<%=i %>").value;
+			             var numeverytotal=document.getElementById("NumEveryTotaliWaring<%=i %>").value;
+			                     numeverytotal++;
+			                     numeverytotal=document.getElementById("NumEveryTotaliWaring<%=i %>").value=numeverytotal;
+			                     
+			                      var TotalMop=Number(numeverytotal)*Number(shangPinPrice);
+			                    document.getElementById("totalmopiWaring<%=i %>").value=TotalMop;
+			            }
+			            function DeleteNumiWaring<%=i%>(){
+			            var shangPinPrice=document.getElementById("ShangPinPriceiWaring<%=i %>").value;
+			             var totalmop=document.getElementById("totalmopiWaring<%=i %>").value;
+			             var numeverytotal=document.getElementById("NumEveryTotaliWaring<%=i %>").value;
+			                     if(numeverytotal<=1){
+			                      document.getElementById("NumEveryTotaliWaring<%=i %>").value=numeverytotal;
+			                      var TotalMop=Number(numeverytotal)*Number(shangPinPrice);
+			                    document.getElementById("totalmopiWaring<%=i %>").value=TotalMop;
+			                     }else{
+			                     numeverytotal--;
+			                     document.getElementById("NumEveryTotaliWaring<%=i %>").value=numeverytotal;
+			                     var TotalMop=Number(numeverytotal)*Number(shangPinPrice);
+			                    document.getElementById("totalmopiWaring<%=i %>").value=TotalMop;
+			                     }
+			            }
+			            
+			            </script>
+			       <%}else{%>
+			       <%} %>
+			       
+			       
+			       <%} %>
+			       <%} %>
+			       
+			       <%}else{%>
+			       <%} %>
 			       <div class="col-xs-12 col-sm-12" style="text-align:center;padding: 20px 0;">
 			           <span style="color:#cacaca;">~沒有更多內容~</span>
 			         </div>
 			     </div>
 			   </div>
+			   
+			   
+			   
+			   
 			 <!--下架商品  -->
 			   <div class="tab-pane fade" id="shopdown" style="">
 			     <div class="row" style="padding:0;">
@@ -768,25 +983,68 @@ ArrayList<ShoppingCart> shoppingcart=CustomerShoppingDao.CustomerShoppingCart(Cu
 			         <div class="skb_left skb_in_price">金額(MOP)</div>
 			         <div class="skb_left skb_inoperation">操作</div>
 			       </div>
+			       <%
+			         String[] shopiddown=new String[shoppingcart.size()];//去掉重複的店鋪id值
+			               List<String> listdown=null;
+			              if(shoppingcart!=null){
+			               for(int i=0;i<shoppingcart.size();i++){ 
+			               shopiddown[i]=""+shoppingcart.get(i).getiShopId();
+			                listdown=DataTimeNumber.RemoveReArray(shopiddown);
+			          }
+			          %>
+			          <%
+			          int numTotal=0;
+			          for(int s=0;s<listdown.size();s++){
+			                     Shop shop=CustomerShoppingDao.CustomerUserShop(ListShop,Integer.parseInt(listdown.get(s)));//根據店鋪的id來獲取此店鋪的id和名稱
+			           for(int i=0;i<shoppingcart.size();i++){ //根據購物車中的商品id獲取對應的商品信息
+			              ShangPin  cartshangpin=ShangPinManagedao.CusShangpinSeetion(ListUsershangpin,shoppingcart.get(i).getiGoodsId(),shop.getId());
+			            
+			             if(cartshangpin!=null&&cartshangpin.getNumber()!=null&&cartshangpin.getState()==1&&cartshangpin.getShopid()==shop.getId()){
+			          %>
 			       <div class="col-xs-12 col-sm-12 skb_home" style="">
 			         <input type="checkbox" value="">&nbsp;&nbsp;<img src="images/skb_home.png" style="width:50px;margin: 0 20px;">
-			         <span class="skb_hometxt">FridayShoes<span style="color:#ff5b77;">(<span>2</span>)</span></span>
+			         <span class="skb_hometxt"><%=shop.getShopname() %><span style="color:#ff5b77;">(<span>2</span>)</span></span>
 			       </div>
+			       <%}
+			       } %>
+			       
+			       <% 
+			        
+			        for(int i=0;i<shoppingcart.size();i++){ //根據購物車中的商品id獲取對應的商品信息
+			            // ShangPin  cartshangpin=CustomerShoppingDao.CustomerShangpin(shoppingcart.get(i).getiGoodsId(),shop.getId());
+			             ShangPin  cartshangpin=ShangPinManagedao.CusShangpinSeetion(ListUsershangpin,shoppingcart.get(i).getiGoodsId(),shop.getId());
+			             if(cartshangpin!=null&&cartshangpin.getNumber()!=null&&cartshangpin.getState()==1){
+			        %>
+			       
 			       <div class="col-xs-12 col-sm-12 skb_homeshop" style="background-color:#eeeeee;height:121px;">
 			         <div class="skb_left skb_cks"><input type="checkbox" value=""></div>
-			         <div class="skb_left skb_ckimg_1"><img src="images/skbpr1.png" class="skb_ck_img"></div>
+			         <div class="skb_left skb_ckimg_1"><img src="http://wap.macaoeasybuy.com/<%=cartshangpin.getPic() %>" class="skb_ck_img"></div>
 			         <!-- 商品信息 -->
 			         <div class="skb_left skb_inf_1">
-			           <span style="">洛馬克風木底小跟鞋</span>
+			           <span style=""><%=cartshangpin.getTitle() %></span>
 			           <script>
 					        var paragraph = document.getElementsByTagName('body')[0].getElementsByTagName('span')[0];
 					        $clamp(paragraph, {clamp: 1, useNativeClamp: false, animate: false});
 					    </script>
 					   <span class="skb_bt_1">已下架</span><br>
-					   <span><img src="images/skb_1.png" class="skb_ic"></span>
+					   
+					    <%
+					    if(cartshangpin.getShangpinLable()!=null&&shangpinlebelList.size()>0){
+					    String[] shangpinlabel=DataTimeNumber.GetStringModelValue(cartshangpin.getShangpinLable());
+					    for(int t=0;t<shangpinlabel.length;t++){
+					    if(!shangpinlabel[t].equals("")){
+					    for(int u=0;u<shangpinlebelList.size();u++){
+					    if(Integer.parseInt(shangpinlabel[t])==shangpinlebelList.get(u).getId()){ %>
+					    <span><img src="http://wap.macaoeasybuy.com/<%=shangpinlebelList.get(u).getPicture() %>" class="skb_ic"></span>
+					    <%}
+					    }
+					    }
+					    }
+					     }%>
+					   <!-- <span><img src="images/skb_1.png" class="skb_ic"></span>
 					   <span><img src="images/skb_3.png" class="skb_ic"></span>
 					   <span><img src="images/skb_2.png" class="skb_ic"></span>
-					   <span><img src="images/skb_4.png" class="skb_ic"></span>
+					   <span><img src="images/skb_4.png" class="skb_ic"></span> -->
 					   <div id="scrollDiv_keleyi_com3" class="scrollDiv">
 						<ul>
 						  <li>店主贈送 10分積分</li>
@@ -796,23 +1054,41 @@ ArrayList<ShoppingCart> shoppingcart=CustomerShoppingDao.CustomerShoppingCart(Cu
 					   </div>
 			         </div>
 			         <div class="skb_left skb_inn_1">
-			             <span style="color:#8f8f8f;">綠色，38碼</span>		           
+			             <span style="color:#8f8f8f;"><%=shoppingcart.get(i).getsStandard()%></span>		           
 			         </div>
 			         <div class="skb_left skb_inp_1" style="margin-top:50px;">
-			           <span>150.00</span><br>
+			           <span><%=cartshangpin.getPrice()%></span><br>
 			         </div>
 			         <div class="skb_left skp_innum_1">
-			            <div style="margin-top: 30px;color:#8f8f8f;">1</div>
+			            <div style="margin-top: 30px;color:#8f8f8f;"><%=shoppingcart.get(i).getiCount()%></div>
 			         </div>
-			         <div class="skb_left skb_in_price1" style="margin-top:50px;color:#8f8f8f;">150.00</div>
+			         <div class="skb_left skb_in_price1" style="margin-top:50px;color:#8f8f8f;"><%=cartshangpin.getPrice()%></div>
 			         <div class="skb_left skb_inoperation1" style="margin:0;height:100%;background-color:#fff;">
 			          <div style="margin-top:40px">
 			           <img src="images/skb_heart.png" style="width:35px;margin-right:10px;">
 			           <img src="images/skb_share.png" style="width:35px;margin-right:10px;">
-			           <img src="images/skb_delet.png" style="width:35px;margin-right:10px;">
-			          </div>
+			            <a  onclick="return IsNoDeletedown<%=i%>();" ><img src="images/skb_delet.png" style="width:35px;margin-right:10px;" ></a>
+			         </div>
+			        <script type="text/javascript">
+			        function IsNoDeletedown<%=i%>(){
+			         var r=confirm("确定購物籃取消此商品吗？");
+                           if(r==false){
+                              return false;
+                              }else{
+                              window.location.href="DeleteCartGoodsServlet?cartid=<%=shoppingcart.get(i).getId() %>";   
+                                 return true;
+                                   }
+			        }
+			        </script>
 			         </div>
 			       </div>
+			       <%}else{%>
+			       <%} %>
+			       <%} %>
+			       <%} %>
+			       
+			       <%}else{%>
+			       <%} %>
 			       <div class="col-xs-12 col-sm-12" style="text-align:center;padding: 20px 0;">
 			           <span style="color:#cacaca;">~沒有更多內容~</span>
 			         </div>
@@ -978,3 +1254,4 @@ ArrayList<ShoppingCart> shoppingcart=CustomerShoppingDao.CustomerShoppingCart(Cu
 </div>
   </body>
 </html>
+

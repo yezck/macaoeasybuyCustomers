@@ -3308,29 +3308,29 @@ a.btn.disabled,fieldset[disabled] a.btn {
 }
 
 .btn-default.focus,.btn-default:focus {
-	color: #333;
-	background-color: #e6e6e6;
-	border-color: #8c8c8c
+	color: #8f8f8f;
+	background-color: #fff;
+	border-color: #ccc
 }
 
 .btn-default:hover {
-	color: #333;
-	background-color: #e6e6e6;
-	border-color: #adadad
+	color: #8f8f8f;
+	background-color: #fff;
+	border-color: #ccc
 }
 
 .btn-default.active,.btn-default:active,.open>.dropdown-toggle.btn-default
 	{
-	color: #333;
-	background-color: #e6e6e6;
-	border-color: #adadad
+	color: #8f8f8f;
+	background-color: #fff;
+	border-color: #ccc
 }
 
 .btn-default.active.focus,.btn-default.active:focus,.btn-default.active:hover,.btn-default:active.focus,.btn-default:active:focus,.btn-default:active:hover,.open>.dropdown-toggle.btn-default.focus,.open>.dropdown-toggle.btn-default:focus,.open>.dropdown-toggle.btn-default:hover
 	{
-	color: #333;
-	background-color: #d4d4d4;
-	border-color: #8c8c8c
+	color:#8f8f8f;
+	background-color: #fff;
+	border-color: #ccc
 }
 
 .btn-default.active,.btn-default:active,.open>.dropdown-toggle.btn-default
@@ -4262,15 +4262,16 @@ select[multiple].input-group-sm>.form-control,select[multiple].input-group-sm>.i
 }
 
 .nav-tabs>li>a:hover {
-	border-color: #eee #eee #ddd
+	color: #ffd800;
+	background-color: #525252;
 }
-
+		
 .nav-tabs>li.active>a,.nav-tabs>li.active>a:focus,.nav-tabs>li.active>a:hover
 	{
-	color: #555;
-	cursor: default;
-	background-color: #fff;
-	border: 1px solid #ddd;
+	color: #ffd800;
+    cursor: default ;
+    background-color: #525252 ;
+    border: none;
 	border-bottom-color: transparent
 }
 

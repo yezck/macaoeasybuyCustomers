@@ -1,3 +1,11 @@
+<%@page import="customerEnter.dao.goodsdao.ShangPinCommentdao"%>
+<%@page import="customerEnter.dao.goodsdao.ShangPinManagedao"%>
+<%@page import="customerEnter.tool.Add_subtractClassJSP"%>
+<%@page import="customerEnter.tool.DataTimeNumber"%>
+<%@page import="customerEnter.dao.shop.CustomerShopDao"%>
+<%@page import="customerEnter.bean.shangpin.Area"%>
+<%@page import="customerEnter.bean.shangpin.ShangPin"%>
+<%@page import="customerEnter.bean.store.Shop"%>
 <%@page import="customerEnter.bean.customerUser.Customers"%>
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%
@@ -5,6 +13,11 @@ String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 
 Customers CustomerValue=(Customers)session.getAttribute("CustomerValue");//登入的客戶
+
+
+Shop shop =(Shop)session.getAttribute("shop");
+ArrayList<ShangPin> shangpins =(ArrayList<ShangPin>)session.getAttribute("shangpins");
+
 
 %>
 
@@ -20,18 +33,24 @@ Customers CustomerValue=(Customers)session.getAttribute("CustomerValue");//登�
 	<meta http-equiv="expires" content="0">    
 	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
 	<meta http-equiv="description" content="This is my page">
+	
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"> 
+	<link rel="stylesheet" href="css/jquery.webui-popover.min.css"> 
 	<script src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="js/scroll.js"></script>
 	<script src="js/clamp.js" type="text/javascript"></script>
     <script src="js/clamp.min.js" type="text/javascript"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.webui-popover.min.js"></script>
+    <script type="text/javascript" src="js/jquery.masonry.min.js"></script>
+    
+  
     <script>
 	  $(document).ready(function(){
 	   $('.list_lh li:even').addClass('lieven');
 	   $('.carousel').carousel({
-		 interval: 3000
+		 interval: 4000
 		})
 			});
 			$(function(){
@@ -42,6 +61,7 @@ Customers CustomerValue=(Customers)session.getAttribute("CustomerValue");//登�
 		});
 
 	  </script>
+	  
 	<style>
 	.nav-tabs>li>a{
 	   border:none;
@@ -68,38 +88,58 @@ Customers CustomerValue=(Customers)session.getAttribute("CustomerValue");//登�
 	   background-color: #9c9c9c;
 	}
     </style>
+    
+    
+    
+    
+    
   </head>
-  <script  type="text/javascript">
-                          function singOut() {//退出
-                          var r=confirm("确定退出吗？");
-                           if(r==false){
-                              return false;
-                              }else{
-                                 return true;
-                                   }
-                                     }
-                             </script>
-  <body style="background:url(images/index_back.png);">
+  
+  <body style="background:url(images/index_back.png);background-attachment:fixed;">
 	<header class="hea" style="">
-	  <ol class="breadcrumb" style="float: right;">
+	  <ul class="breadcrumb" style="float: right;">
 	  <%if(CustomerValue!=null){ %>
-	  <li><a href="/mbuyenter/GoOutCustomerLoginServlet" class="hea_a" onclick="return singOut();">退出</a></li>
+	  <li><a  class="hea_a" onclick="return singOut();">退出</a></li>
 	  <%}else{ %>
 	  <li><a href="Login.jsp" class="hea_a">登入</a></li>
 	  <li><a href="#" class="hea_a">註冊</a></li>
 	  <%} %>
-	  <li><a href="cart.jsp" class="hea_a">購物籃</a></li>
+	  <li><a href="#" class="hea_a">購物籃</a></li>
 	  <li><a href="#" class="hea_a">紅包積分</a></li>
 	  <li><a href="#" class="hea_a">足跡</a></li>
 	  <li><a href="#" class="hea_a">分享好友</a></li>
 	  <li><a href="#" class="hea_a">APP下載</a></li>
-	 </ol>
+	 </ul>
 	</header>
-    <div class="shop_logo"><img src="http://wap.macaoeasybuy.com/\uploadfile\201406\20140623045134635391390945249858.jpg" style="width:100%;"></div>
+	<script type="text/javascript">
+	 function singOut() {//退出
+                          var r=confirm("确定退出吗？");
+                           if(r==false){
+                              return false;
+                              }else{
+                              window.location.href="GoOutCustomerLoginServlet";   
+                                 return true;
+                                   }
+                                     }
+	</script>
+    <div class="shop_logo"><img src="http://wap.macaoeasybuy.com/<%=shop.getLogo() %>" style="width:100%;"></div>
     <div class="shop_li">
-       <ol class="breadcrumb" style="margin:0;">
-	    <li style="margin-right:10px;"><span class="shop_a">商品數量：</span><span style="color:#fd8970;">128</span></li>
-	    <li style="margin-right:10px;"><span class="shop_a">商品類別：</span><span style="color:#fd8970;">服飾</span></li>
+       <ul class="breadcrumb" style="margin:0;">
+	    <li style="margin-right:10px;"><span class="shop_a">商品數量：</span><span style="color:#fd8970;"><%=shangpins.size() %></span></li>
+	     <%
+	   String  ShopGoogType="";
+	   if(shop.getGoodstype()==null||shop.getGoodstype().trim().equals("")){
+	   ShopGoogType="未知";
+	   }else{
+	   Area shoparea= CustomerShopDao.querySPArea(Integer.parseInt(shop.getGoodstype()));
+	   if(shoparea!=null){
+              ShopGoogType=shoparea.getName();
+	   }else{
+	    ShopGoogType="未知";
+	   }
+	   }
+	     %>
+	    <li style="margin-right:10px;"><span class="shop_a">商品類別：</span><span style="color:#fd8970;"><%=ShopGoogType %></span></li>
 	    <li style="margin-right:10px;"><span class="shop_a">商品評級：</span>
 	      <img src="images/heart.png" class="shop_li_ic" alt="夠用心">
 	      <!--<img src="images/good.png" class="shop_li_ic" alt="信譽好">-->
@@ -107,9 +147,9 @@ Customers CustomerValue=(Customers)session.getAttribute("CustomerValue");//登�
 	      <!--<img src="images/nice.png" class="shop_li_ic" alt="服務優">-->
 	      <!--<img src="images/place.png" class="shop_li_ic" alt="實體店">-->
 	    </li>
-	    <li style="margin-right:10px;"><span class="shop_a">舉報投訴：</span><span style="color:#fd8970;">0</span></li>
-	    <li><span class="shop_a">創店：</span><span style="color:#fd8970;">2015-11-05</span></li>
-	   </ol>
+	    <li style="margin-right:10px;"><span class="shop_a">舉報投訴：</span><span style="color:#fd8970;"><%=shop.getTel() %></span></li>
+	    <li><span class="shop_a">創店：</span><span style="color:#fd8970;"><%=shop.getAddtime() %></span></li>
+	   </ul>
 	 </div>
         <div class="shop_menu" style="">
           <ul id="myTab" class="nav nav-tabs shop_li">
@@ -177,28 +217,43 @@ Customers CustomerValue=(Customers)session.getAttribute("CustomerValue");//登�
 						     <p>今天真的累死了，不過看到進的一批 新貨都是自己精挑細選的，心情就好 極了。</p>
 						   </td></tr></table>
 						   <script>
-					        var paragraph = document.getElementsByTagName('body')[0].getElementsByTagName('p')[0];
-					        $clamp(paragraph, {clamp: 3, useNativeClamp: false, animate: false});
-					    </script>
+					          var paragraph = document.getElementsByTagName('body')[0].getElementsByTagName('p')[0];
+					          $clamp(paragraph, {clamp: 3, useNativeClamp: false, animate: false});
+					       </script>
 						</li>
 					  </ul>
 					</div>
 			     </div>
 			    </div>
+			    
+			    
+			    
+			    
+			    
+			    
+			    
 <!-- 粉絲 -->
 		         <div class="shop_fan">
 		           <div class="shop_fan_logo" style="">
 			         <table><tr><td>
-			           <img src="images/practice_d2.png" class="shop_head_img">
+			           <img src="http://wap.macaoeasybuy.com/<%=shop.getStoreadvertising() %>" class="shop_head_img">
 			         </td><td style="padding: 10px 0 0 0;">
-			           <span style="float:left;"><img src="images/comma_left.png" style="margin-top: -15px;"></span>
-			           <span class="sho_fan_txt">女人的鞋柜里必须有一双高跟鞋， SHOZ一定讓你找到你最愛的那双！</span>
+			           <span style="float:left;margin-right: 10px;"><img src="images/comma_left.png" style="margin-top: -15px;"></span>
+			           <span class="sho_fan_txt"><%=shop.getShopInfor() %></span>
 			           <span style="float:left;"><img src="images/comma_right.png" style="margin-top: -10px;"></span>
 			         </td></tr></table>
+			         	<script>
+					      var fans = document.getElementsByTagName('body')[0].getElementsByTagName('span')[0];
+					      $clamp(fans, {clamp: 3, useNativeClamp: false, animate: false});
+					    </script>
 			       </div>
-			       <div  style="width:780px;float:right;">
+			       <div  style="width:840px;float:right;">
 			          <div class="shop_fan_txt">
-			              <span style="font-size:2rem;color:#f8af00;">2567</span><br>
+			          <%
+	   	                       ArrayList<ShangPin> shangpinsesion=ShangPinManagedao.CustomerAddTimeShSession(shangpins, shop.getId()); 
+	   	                        int total[]=ShangPinManagedao.TotalSeeBuyNum(shangpinsesion);
+	   	                  %>
+			              <span style="font-size:2rem;color:#f8af00;"><%=total[0] %></span><br>
 			              <span style="font-size:1.6rem;color:#ccc;">宜粉到訪</span>
 			          </div>
 			          <div class="shop_fan_see">
@@ -211,6 +266,13 @@ Customers CustomerValue=(Customers)session.getAttribute("CustomerValue");//登�
 			          </div>
 			       </div>
 		         </div>
+		         
+		         
+		         
+		         
+		         
+		         
+		         
 <!-- 商品分類 -->	
                <div class="shop_menu" style="padding:0;margin-top:20px;">
                    <ul id="mysTab" class="nav nav-tabs shop_shop" style="margin-left: 20px;">
@@ -220,69 +282,88 @@ Customers CustomerValue=(Customers)session.getAttribute("CustomerValue");//登�
 				   <li class=""><a href="#fan" class="shop_shop_a" data-toggle="tab">粉絲</a></li>
 				  </ul>
 				  <div class="shop_shop_right">
+				  <%
+				 // double[]commentNum= ShangPinCommentdao.calculateComment(shangpincomment, goodsdetails.getNumber());
+				   %>
 				    <span>描述相符&nbsp;&nbsp;</span><span>4.6</span>/5.0&nbsp;&nbsp;<span>|</span>
 				    <span>價格合理&nbsp;&nbsp;</span><span>4.6</span>/5.0&nbsp;&nbsp;<span>|</span>
 				    <span>商品質量&nbsp;&nbsp;</span><span>4.6</span>/5.0
 				  </div>
                </div>
                <div id="mysTabContent" class="tab-content containter_s" >
+               
+               
+               
+               
 				 <!-- 所有商品 -->
+				 
 				 <div class="tab-pane fade in active" id="all" style="">
-				   <div class="" style="width:100%;height:auto;">
-				     <div class="shop_all_e">
-				        <img src="images/shop-prati1.png" style="width:100%;">
+				  <div style="width:100%;height:auto;margin-top: 5px;">
+	                 <div id="con1_1">
+                          <!-- 單件商品遍歷從此開始 -->     
+                   <%
+                   if(shangpins!=null&&shangpins.size()!=0){ %>
+				 <%for(int i=0;i<shangpins.size();i++){
+				  %>     
+				   
+				  
+	                   <div class="product_list shop_all_e">
+		                    <div style="min-height:180px;">
+		                       <img src="http://wap.macaoeasybuy.com/<%=shangpins.get(i).getPic() %>" style="width:100%;">
+		                    </div>
 				        <table><tr>
 				         <td class="shop_all_td1" style="color:#ff0a4f;">
 				         <img src="images/ev4_.png" style="width:25px;">
-				         <span style="vertical-align: middle;">2738</span>
+				         <span style="vertical-align: middle;"><%=shangpins.get(i).getsSeeNum() %></span>
 				        </td>
 				        <td class="shop_all_td1" style="color:#ccc;">
-				          <span>MOP</span><span>2500</span>
+				          <span>MOP</span><span><%=shangpins.get(i).getPrice()%></span>
 				        </td>
 				       </tr></table>
 				       <table>
 				        <tr><td class="shop_all_td2" style="">
-				          <h4>英倫風古銅色小平底</h4>
-				          <!--  
+				          <h4><%=shangpins.get(i).getTitle()%></h4>
 				          <script>
-					        var header = document.getElementsByTagName('body')[0].getElementsByTagName('h4')[0];   
-					        $clamp(header, {clamp: 1, useNativeClamp: false});
-					    </script>-->
+						        var header = document.getElementsByTagName('body')[0].getElementsByTagName('h4')[0];   
+						        $clamp(header, {clamp: 1, useNativeClamp: false});
+					    </script>
 				        </td></tr>
 				        <tr><td style="text-align:center;">
-				         <a href="#"><img src="images/kep.png"></a>
+						   <a href="testcart.jsp?shangpin=<%=shangpins.get(i).getId()%>"><button class="skb_innbtn" data-toggle="modal"  >
+							    <img src="images/kep.png">
+							</button>	  </a>
+		                          							
 				        </td></tr>
 				       </table>
-				     </div>
-				     <div class="shop_all_e">
-				        <img src="images/1.jpg" style="width:100%;">
-				        <table><tr>
-				         <td class="shop_all_td1" style="color:#ff0a4f;">
-				         <img src="images/ev4_.png" style="width:25px;">
-				         <span style="vertical-align: middle;">2738</span>
-				        </td>
-				        <td class="shop_all_td1" style="color:#ccc;">
-				          <span>MOP</span><span>2500</span>
-				        </td>
-				       </tr></table>
-				       <table>
-				        <tr><td class="shop_all_td2" style="">
-				          <h4>英倫風古銅色小平底</h4>
-				          <!--  
-				          <script>
-					        var header = document.getElementsByTagName('body')[0].getElementsByTagName('h4')[0];   
-					        $clamp(header, {clamp: 1, useNativeClamp: false});
-					    </script>-->
-				        </td></tr>
-				        <tr><td style="text-align:center;">
-				         <a href="#"><img src="images/kep.png"></a>
-				        </td></tr>
-				       </table>
-				     </div>
+	                    </div>
+	                    <script>
+						  $(document).ready(function(){
+					        var $container = $('#con1_1');	
+								$container.imagesLoaded(function(){
+									$container.masonry({
+										itemSelector: '.product_list',
+										columnWidth: 5 //每两列之间的间隙为5像素
+									});
+								});
+						   
+							});
+						  </script>
+                    <%} %>
+				   <%}else{ %>
+				   ~~~~~~~沒有任何信息~~~~~~~~~
+				   <%} %>
+	                 </div>
+	              </div>
 				   </div>
-				   </div>
+				  
+				   
+				   
+				   
 				    <!-- 上新 -->
-				    <div class="tab-pane fade" id="new" style=""></div>
+				    <div class="tab-pane fade " id="new" style="">
+				    <iframe src="newupshopshangpin.jsp" scrolling="yes" frameborder="0" width="100%" height="100%" ></iframe>
+				    </div>
+				    
 			        <!-- 價錢 -->
 				    <div class="tab-pane fade" id="money" style=""></div>
 			        <!-- 粉絲 -->
@@ -312,7 +393,7 @@ Customers CustomerValue=(Customers)session.getAttribute("CustomerValue");//登�
 <!--頁腳  -->
 	<div id="footer" style="clear:both;text-align:center;padding-top: 30px;">
 	  <div style="padding:0;text-align:center;color:#ff0a4f;width:100%;">~沒有更多內容了~</div>
-      <div style="padding:0;width:100%;"><img src="images/foot.png" style="width:100%;min-width:760px;"></div>
+      <div style="padding:0;width:100%;"><img src="images/foot.png" style="width:100%;min-width:1370px;"></div>
          <div class="containter_foot" style="padding:0;margin-bottom:0;height:auto;">
             <div style="width:260px;float:left;"><img src="images/logo.png" ></div>
               <div class="foot_right" style="">
@@ -338,9 +419,9 @@ Customers CustomerValue=(Customers)session.getAttribute("CustomerValue");//登�
       <img src="images/sign.png" class="top_fix_img">
       <span style="display:block;">登入/註冊</span>
     </a></li>
-    <li class="top_fix_li"><a href="#" style="color:black;">
+    <li class="top_fix_li"><a href="cart.jsp" style="color:black;">
       <img src="images/kep_l.png" class="top_fix_img">
-      <span style="display:block;">購物籃(<span>0</span>/<span>0</span>)</span>
+      <span style="display:block;">購物籃(<span>0</span>/<span>100</span>)</span>
     </a></li>
     <li class="top_fix_li"><a href="#" style="color:black;">
       <img src="images/integral.png" class="top_fix_img">
@@ -354,7 +435,7 @@ Customers CustomerValue=(Customers)session.getAttribute("CustomerValue");//登�
       <img src="images/sharefriend.png" class="top_fix_img">
       <span style="display:block;">分享好友</span>
     </a></li>
-    <li class="top_fix_lid"><a href="#" style="color:fff;">
+    <li class="top_fix_lid"><a href="#" style="color:#fff;">
       <img src="images/appdown.png" class="top_fix_img">
       <span style="display:block;">APP下載</span>
     </a></li>

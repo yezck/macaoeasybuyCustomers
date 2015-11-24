@@ -32,7 +32,7 @@ public class CustomerShoppingDao {
 	 * */
 	
 	public  static  ShangPin CustomerShangpin(int Id,int shopid) {
-		String sql="use test_mbuydate select id,Title,Number,CostPrice,Price,Pic,shopid,AreaClassID,jiang,guige,jiage,kucun,tupian,chengben,addtime,uptime,sLoveNum,sBuyNum,sSeeNum,State,intro,expertlable,MaoA,MaoB,iWarningCount from ShangPin where id='"+Id+"' and shopid='"+shopid+"'";
+		String sql="use test_mbuydate select id,Title,Number,CostPrice,Price,Pic,shopid,AreaClassID,jiang,tuan,guige,jiage,kucun,tupian,chengben,addtime,uptime,sLoveNum,sBuyNum,sSeeNum,mop,State,intro,expertlable,MaoA,MaoB,iWarningCount,shangpinlabel from ShangPin where id='"+Id+"' and shopid='"+shopid+"'";
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -51,6 +51,7 @@ public class CustomerShoppingDao {
 				goods.setShopid(rs.getInt("shopid"));
 				goods.setAreaClassID(rs.getString("AreaClassID"));
 				goods.setJiang(rs.getInt("jiang"));//降價商品
+				goods.setTuan(rs.getInt("tuan"));//降價商品
 				goods.setGuige(rs.getString("guige"));
 				goods.setJiage(rs.getString("jiage"));
 				goods.setKucun(rs.getString("kucun"));
@@ -61,12 +62,14 @@ public class CustomerShoppingDao {
 				goods.setsLoveNum(rs.getInt("sLoveNum"));
 				goods.setsBuyNum(rs.getInt("sBuyNum"));
 				goods.setsSeeNum(rs.getInt("sSeeNum"));
+				goods.setMop(rs.getInt("mop"));
 				goods.setState(rs.getInt("State"));//狀態
 				goods.setIntro(rs.getString("intro"));
 				goods.setExpertlable(rs.getInt("expertlable"));
 				goods.setMaoA(rs.getString("MaoA"));
 				goods.setMaoB(rs.getString("MaoB"));
 				goods.setiWarningCount(rs.getInt("iWarningCount"));//報警數量
+				goods.setShangpinLable(rs.getString("shangpinlabel"));
 			}
 			
 		} catch (SQLException ex) {
@@ -176,6 +179,28 @@ public class CustomerShoppingDao {
 				}
 			} catch (SQLException ex) {
 				Logger.getLogger(CustomerShoppingDao.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+		return shop;
+	}
+	
+	
+	
+	/** cart.jsp頁面
+	 * 根據會員登錄的賬號獲取對應的購物車之後根據此會員的購物車商品的店鋪標號來獲取對應的店鋪信息
+	 * 時間：2015/11/18
+	 * 編者：徐新院
+	 * **/
+	public  static  Shop CustomerUserShop(ArrayList<Shop>shopssion,int id) {
+		Shop shop=null;
+		if(shopssion!=null&&shopssion.size()>0){
+			for(int i=0;i<shopssion.size();i++){
+				if(shopssion.get(i).getId()==id){
+					shop=new Shop();
+					shop.setId(shopssion.get(i).getId());
+					shop.setShopname(shopssion.get(i).getShopname());
+					shop.setLogo(shopssion.get(i).getLogo());
+				}
 			}
 		}
 		return shop;

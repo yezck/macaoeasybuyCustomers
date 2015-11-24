@@ -3,6 +3,7 @@ package customerEnter.Servlet.customerlogin;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -32,21 +33,21 @@ public class CustomerLoginServlet extends HttpServlet {
 		
 		 Customers customer=CustomerUserManageDao.ValidateLogin(Account);
 		 if(customer.getAccount()==null){
-			 session.setAttribute("CustomerValue",null);
+			 session.setAttribute("CustomerValidate","1");//Ù~‘ô²»´æÔÚ
+			 response.sendRedirect("Login.jsp");
+		 }else if(!customer.getPsw().equals(AccountPsw.trim())){
+			 session.setAttribute("CustomerValidate","0");//ÃÜ´a²Ù×÷
 			 response.sendRedirect("Login.jsp");
 		 }else{
-			 if(customer.getPsw().equals(AccountPsw)){
-				 Customers CustomerValue=(Customers)session.getAttribute("CustomerValue");
-				 if(CustomerValue!=null){
-					 session.setAttribute("CustomerValue",null);
-				 }
+			 
 				 session.setAttribute("CustomerValue",customer);
-				 response.sendRedirect("shopindex.jsp");
-			 }else{
-				 session.setAttribute("CustomerValue",null);
-				 response.sendRedirect("Login.jsp");
-			 }
+				 response.sendRedirect("shops.jsp");
+				// RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/page/1.jsp");   
+				 //rd.forward(request,response);
 		 }
+		 
+		 
+		 
 	}
 
 }

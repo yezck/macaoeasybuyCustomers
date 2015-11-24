@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="3.0" 
-	xmlns="http://java.sun.com/xml/ns/javaee" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
-	http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
   <display-name></display-name>
   <servlet>
     <description>This is the description of my J2EE component</description>
@@ -11,34 +7,126 @@
     <servlet-name>CustomerLoginServlet</servlet-name>
     <servlet-class>customerEnter.Servlet.customerlogin.CustomerLoginServlet</servlet-class>
   </servlet>
+  
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>EnterShopServlet</servlet-name>
+    <servlet-class>customerEnter.Servlet.shopServlet.EnterShopServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>JoinUserCartServlet</servlet-name>
+    <servlet-class>customerEnter.Servlet.joincart.JoinUserCartServlet</servlet-class>
+  </servlet>
   <servlet>
     <description>This is the description of my J2EE component</description>
     <display-name>This is the display name of my J2EE component</display-name>
     <servlet-name>GoOutCustomerLoginServlet</servlet-name>
     <servlet-class>customerEnter.Servlet.customerlogin.GoOutCustomerLoginServlet</servlet-class>
   </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>DeleteCartGoodsServlet</servlet-name>
+    <servlet-class>customerEnter.Servlet.joincart.DeleteCartGoodsServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>EnterCartServlet</servlet-name>
+    <servlet-class>customerEnter.Servlet.joincart.EnterCartServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <description>This is the description of my J2EE component</description>
+    <display-name>This is the display name of my J2EE component</display-name>
+    <servlet-name>goodsdetailServlet</servlet-name>
+    <servlet-class>customerEnter.Servlet.goods.goodsdetailServlet</servlet-class>
+  </servlet>
 
 
 
-<!-- 
-功能：已買客戶登錄進入系統的入口
-時間：2015/11/9
+ 
+
+
+
+
+<!--  
+功能：消費者登錄操作
+時間：2015/11/14
 編者：徐新院
- -->
+-->
   <servlet-mapping>
     <servlet-name>CustomerLoginServlet</servlet-name>
     <url-pattern>/CustomerLoginServlet</url-pattern>
   </servlet-mapping>
   
-  <!-- 
-功能：已經登錄的客戶安全退出
-時間：2015/11/9
+<!--  
+功能：消費者退出操作
+時間：2015/11/14
 編者：徐新院
- -->
-  <servlet-mapping>
+-->
+ <servlet-mapping>
     <servlet-name>GoOutCustomerLoginServlet</servlet-name>
     <url-pattern>/GoOutCustomerLoginServlet</url-pattern>
   </servlet-mapping>
+  
+<!--  
+功能：消費者進入某一個店鋪的操作
+時間：2015/11/14
+編者：徐新院
+-->
+  <servlet-mapping>
+    <servlet-name>EnterShopServlet</servlet-name>
+    <url-pattern>/EnterShopServlet</url-pattern>
+  </servlet-mapping>
+  
+<!--  
+功能：消費者選擇商品之後進入購物車的操作
+時間：2015/11/14
+編者：徐新院
+-->
+  <servlet-mapping>
+    <servlet-name>JoinUserCartServlet</servlet-name>
+    <url-pattern>/JoinUserCartServlet</url-pattern>
+  </servlet-mapping>
+  
+  <!--  
+功能：消費者登錄系統之後再自己的購物車中選擇不想買的東西可以將其刪除
+時間：2015/11/17
+編者：徐新院
+-->
+  <servlet-mapping>
+    <servlet-name>DeleteCartGoodsServlet</servlet-name>
+    <url-pattern>/DeleteCartGoodsServlet</url-pattern>
+  </servlet-mapping>
+  
+<!--  
+功能：消費者登錄成功之後點擊按鈕進入購物籃
+時間：2015/11/17
+編者：徐新院
+-->
+  <servlet-mapping>
+    <servlet-name>EnterCartServlet</servlet-name>
+    <url-pattern>/EnterCartServlet</url-pattern>
+  </servlet-mapping>
+  
+  <!--  
+功能：消費者登錄成功之後點擊按鈕進入商品詳細頁
+時間：2015/11/23
+編者：徐新院
+-->
+  <servlet-mapping>
+    <servlet-name>goodsdetailServlet</servlet-name>
+    <url-pattern>/goodsdetailServlet</url-pattern>
+  </servlet-mapping>
+
+ 
+  
+  
+  
+  
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>

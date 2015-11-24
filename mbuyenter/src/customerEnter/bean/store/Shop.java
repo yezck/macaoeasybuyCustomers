@@ -19,6 +19,7 @@ public class Shop {
 	private String addtime;
 	private String uptime;
 	private int state;
+	private String ShopPic;
 	private int ZTState;
 	private String ShopWhatsapp;
 	private String ShopWechat;
@@ -162,6 +163,12 @@ public class Shop {
 	}
 	public void setShopAddress(String shopAddress) {
 		ShopAddress = shopAddress;
+	}
+	public String getShopPic() {
+		return ShopPic;
+	}
+	public void setShopPic(String shopPic) {
+		ShopPic = shopPic;
 	}
 	
 	

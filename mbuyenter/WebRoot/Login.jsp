@@ -11,7 +11,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <base href="<%=basePath%>">
     
     <title>登陸</title>
-    
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="expires" content="0">    
@@ -70,27 +69,60 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	   
 	   <!--宜粉登入  -->
 	   <%
-	   Customers CustomerValue=(Customers)session.getAttribute("CustomerValue");
+	   String  CustomerValidate=(String)session.getAttribute("CustomerValidate");
 	   %>
 		 <div class="tab-pane fade in active" id="fanin" style="">
-		 <form action="CustomerLoginServlet" name="MacaoCustomerLogin" method="post" onsubmit=" return ValidateAccountLength();">
+		 <form action="CustomerLoginServlet" name="MacaoCustomerLogin" method="post" >
 		   <div class="row" style="margin:0;">
 		     <div class="col-sm-12" style="margin-top:50px;">
 		       <div class="col-sm-12" style="padding: 10px 50px;">
-		         <input type="text" class="login_txt" id="AccountNo" name="AccountNo" value="" placeholder="請輸入宜買帳號(3-9位)" >
+		         <input type="text" class="login_txt" id="AccountNo" name="AccountNo" value="" placeholder="請輸入宜買帳號(3-9位)" onchange="Account();">
 		       </div>
 		       <div class="col-sm-12" style="padding: 10px 50px;">
 		         <input type="password" class="login_txt" id="AccountPsw" name="AccountPsw"  value="" placeholder="請輸入宜買密碼(6-20位)" onchange="">
 		       </div>
-		       <div class="col-sm-12" style="padding: 5px 10px 10px 50px;">
+		          <div class="col-sm-12" style="padding: 5px 10px 10px 50px;">
+		          
+		          <%
+		          if(CustomerValidate!=null){
+		           %>
+		           <%if(CustomerValidate=="0"||CustomerValidate=="1"){ %>
+		           <div class="col-sm-2" style="padding:0;">
+		          <button class="login_btn" >登入</button>
+		         </div>
+		           <div class="col-sm-10" style="padding: 12px 0;">
+	             <span style="color:#ff5b77;font-size:1.8rem;">×&nbsp;&nbsp;帳號或密碼錯誤哦，請重新檢查</span>
+		         </div>
+		          <%}else{%>
+		          <div class="col-sm-2" style="padding:0;">
+		          <button class="goout_btn" onclick="HaveLogin();">已登錄</button>
+		         </div>
+		           <%} %>
+		         <%}else{ %>
 		         <div class="col-sm-2" style="padding:0;">
 		          <button class="login_btn" type="submit">登入</button>
 		         </div>
-		         <div class="col-sm-10" style="padding: 12px 0;">
-                <%if(CustomerValue==null){%>
-		           <span style="color:#ff5b77;font-size:1.8rem;">×&nbsp;&nbsp;帳號或密碼錯誤哦，請重新檢查</span>
-               <%}else{}%>
-		         </div>
+		         <%} %>
+		         
+		         <%
+		         if(CustomerValidate!=null){
+		         session.removeAttribute("CustomerValidate");
+		         session.setAttribute("CustomerValidate", null);
+		         }
+		          %>
+		         <script type="text/javascript">
+		         function HaveLogin(){
+		         var r=confirm("您已登錄！是否退出？");
+                           if(r==false){
+                            window.location.href="index.jsp";   
+                              return false;
+                              }else{
+                              window.location.href="GoOutCustomerLoginServlet";   
+                                 return true;
+                     }
+		         }
+		         </script>
+		         
 		       </div>
 		       <div class="col-sm-12" style="padding: 10px 0 10px 65px;">
 		         <span class="login_txt1">快速登入：</span>
@@ -171,24 +203,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	
 	
 	<script type="text/javascript">
-	function ValidateAccountLength(){
+	function Account(){
 	var AccountNo=document.getElementById("AccountNo").value;
-	var AccountPws=document.getElementById("AccountPsw").value;
 	if(AccountNo.length<=3||AccountNo.length>9){
 	document.getElementById("AccountNo").value="";
 	document.getElementById("AccountNo").focus();
 	alert("請輸入合法賬號！");
-	return false;
-	}else if(AccountPws.length<6||AccountPws.length>20){
+	}
+	}
+	function Singin(){
+	var AccountPws=document.getElementById("AccountPsw").value;
+	if(AccountPws.length<6||AccountPws.length>20){
 	document.getElementById("AccountPsw").value="";
 	document.getElementById("AccountPsw").focus();
 	alert("請重新輸入密碼！");
-	return false;
-	}else{
-	return true;
 	}
 	}
-	
 	</script>
   </body>
 </html>

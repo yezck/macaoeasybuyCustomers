@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="mbuyenter">
+    <wb-module deploy-name="easyBuyMall">
         <wb-resource deploy-path="/" source-path="/WebRoot"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-        <property name="context-root" value="/mbuyenter"/>
-        <property name="java-output-path" value="/mbuyenter/WebRoot/WEB-INF/classes"/>
+        <property name="java-output-path" value="/easyBuyMall/WebRoot/WEB-INF/classes"/>
+        <property name="context-root" value="/easyBuyMall"/>
     </wb-module>
 </project-modules>

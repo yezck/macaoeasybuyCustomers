@@ -233,7 +233,8 @@ public class DataTimeNumber {
 	 }
 	 
 	 
-	 /**功能：把Model表中的數據截取后保存在數組中
+	 /**
+	  * 功能：把Model表中的數據截取后保存在數組中
 	  * 時間：2015/10/7
 	  * 編者：徐新院
 	  * */
@@ -268,7 +269,11 @@ public class DataTimeNumber {
 		return strarray3;
 	}
 	 
-	 
+	 /**
+	  * 功能：計算總的金額
+	  * 時間：2015/11/14
+	  * 編者：徐新院
+	  * */
 	 public static int Kucun(String[] kucun){
 		int NumTatol=0;
 		 int[] Ku=new int[kucun.length];
@@ -356,10 +361,93 @@ public class DataTimeNumber {
 		}
 		return Total;
 	 }
-	 
+	 /**
+	  * 功能：獲取商品規格中的第一個規格（圖片色）
+	  * 時間：2015/11/16
+	  * 編者：徐新院
+	  * **/
+	 public static ArrayList<String>getGuigeFirst(String guige){
+		 String[] strarray=null;
+		 ArrayList<String>list=new ArrayList<String>();
+		 String[] att=DataTimeNumber.GetStringModelValue(guige);
+		 for(int i=0;i<att.length;i++){
+			 
+			 strarray=DataTimeNumber.GetString_SmallInterGuige(att[i]);
+			 list.add(strarray[0]);
+		 }
+		return list;
+	 }
+	 /**
+	  * 功能：在shopinindex.jsp頁面中，選擇購物物品是在彈出框中顯示商品的顏色規格和商品的尺碼規格：即：規格一
+	  * 規格一：紅色，黑色，白色
+	  * 規格二：37碼，38碼，39碼
+	  * 時間：2015/11/14
+	  * 編者：徐新院
+	  * ***/
+	 public static List<String> getGuigeOne(String guige){
+		 String[] strarray=null;
+		 ArrayList<Object>list=new ArrayList<Object>();
+		 String[] att=DataTimeNumber.GetStringModelValue(guige);
+		 for(int i=0;i<att.length;i++){
+			 strarray=DataTimeNumber.GetString_SmallInterGuige(att[i]);
+			 for(int j=0;j<strarray.length;j++){
+				 list.add(strarray[0]);
+			 }
+		 }
+		 
+		 String[] ListArray=new String[list.size()];//顏色規格
+		 for(int i=0;i<list.size();i++){
+			 ListArray[i]=(String) list.get(i);
+		 }
+		 
+		 List<String> listARR=DataTimeNumber.RemoveReArray(ListArray);
+		 return listARR;
+	 }
+	
+	 /**
+	  * 功能：在shopinindex.jsp頁面中，選擇購物物品是在彈出框中顯示商品的顏色規格和商品的尺碼規格：即：規格二
+	  * 規格一：紅色，黑色，白色
+	  * 規格二：37碼，38碼，39碼
+	  * 時間：2015/11/14
+	  * 編者：徐新院
+	  * ***/
+	 public static List<String> getGuigeTwo(String guige){
+		 String[] strarray=null;
+		 ArrayList<Object>list2=new ArrayList<Object>();
+		 String[] att=DataTimeNumber.GetStringModelValue(guige);
+		 for(int i=0;i<att.length;i++){
+			 strarray=DataTimeNumber.GetString_SmallInterGuige(att[i]);
+			 if(strarray.length!=1&&!strarray[0].equals("")){
+				 for(int j=0;j<strarray.length;j++){
+					 list2.add(strarray[1]);
+				 }
+			 }
+		 }
+		 
+		 String[] ListArray2=new String[list2.size()];//尺碼規格
+		 for(int i=0;i<list2.size();i++){
+			 ListArray2[i]=(String) list2.get(i);
+		 }
+		 
+		 List<String> listARR=DataTimeNumber.RemoveReArray(ListArray2);
+		 return listARR;
+	 }
+    	 
+	 /**
+	  * 功能：把shangpincart表中的sStandard中的||替換成逗號的形式顯示在cart.jsp頁面中
+	  * 時間：2015/11/19
+	  * 編者：徐新院
+	  * **/
+	 public static String getReplace(String replace){
+		 String newStr = replace.replaceAll("\\|","  ");
+		return newStr;
+	 }
 	 
 	 public static void main(String[] args) {
-		
+		 List<String> list=DataTimeNumber.getGuigeOne("1231,45646,78798");
+		for(int i=0;i<list.size();i++){
+			System.out.println(list.get(i));
+		}
 	}
 	 
 	 
